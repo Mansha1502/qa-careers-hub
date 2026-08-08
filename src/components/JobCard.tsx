@@ -1,15 +1,50 @@
+"use client";
+
 import Link from "next/link";
 import { Job } from "@/lib/types";
 import { companyInitials, timeAgo } from "@/lib/utils";
 import { RegionBadge, SeniorityBadge } from "./Badge";
+import { useTracker } from "./TrackerProvider";
+import { STATUS_LABELS, STATUS_STYLES } from "@/lib/tracker";
 
 export default function JobCard({ job }: { job: Job }) {
+  const { tracked, hydrated, setStatus, remove } = useTracker();
+  const entry = tracked[job.id];
+
+  function toggleSave(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    if (entry) {
+      remove(job.id);
+    } else {
+      setStatus(job.id, "saved");
+    }
+  }
+
   return (
     <Link
       href={`/jobs/${job.id}`}
-      className="group flex flex-col gap-3.5 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 transition-all hover:-translate-y-0.5 hover:border-[var(--accent)]/40 hover:shadow-lg hover:shadow-black/[0.03]"
+      className="group relative flex flex-col gap-3.5 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 transition-all hover:-translate-y-0.5 hover:border-[var(--accent)]/40 hover:shadow-lg hover:shadow-black/[0.03]"
     >
-      <div className="flex items-start justify-between gap-3">
+      <button
+        onClick={toggleSave}
+        aria-label={entry ? "Remove from tracker" : "Save to tracker"}
+        className="absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-md text-[var(--muted)] transition-colors hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)]"
+      >
+        <svg
+          width="15"
+          height="15"
+          viewBox="0 0 24 24"
+          fill={entry ? "currentColor" : "none"}
+          stroke="currentColor"
+          strokeWidth="2"
+          className={entry ? "text-[var(--accent)]" : ""}
+        >
+          <path d="M6 3h12a1 1 0 0 1 1 1v17l-7-4-7 4V4a1 1 0 0 1 1-1Z" strokeLinejoin="round" />
+        </svg>
+      </button>
+
+      <div className="flex items-start justify-between gap-3 pr-8">
         <div className="flex items-center gap-3">
           <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--accent-soft)] text-sm font-semibold text-[var(--accent)]">
             {companyInitials(job.company)}
@@ -45,6 +80,15 @@ export default function JobCard({ job }: { job: Job }) {
         <span className="truncate">{job.location}</span>
         <span className="shrink-0">{timeAgo(job.postedDate)}</span>
       </div>
+
+      {hydrated && entry && (
+        <span
+          className={`absolute -top-2 left-4 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium shadow-sm ${STATUS_STYLES[entry.status].bg} ${STATUS_STYLES[entry.status].text}`}
+        >
+          <span className={`h-1.5 w-1.5 rounded-full ${STATUS_STYLES[entry.status].dot}`} />
+          {STATUS_LABELS[entry.status]}
+        </span>
+      )}
     </Link>
   );
 }

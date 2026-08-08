@@ -1,5 +1,6 @@
 import Link from "next/link";
 import ThemeToggle from "./ThemeToggle";
+import TrackerNavLink from "./TrackerNavLink";
 
 export default function Header() {
   return (
@@ -26,6 +27,7 @@ export default function Header() {
           >
             Browse jobs
           </Link>
+          <TrackerNavLink />
           <Link
             href="/about"
             className="hidden rounded-lg px-3 py-2 text-sm font-medium text-[var(--muted)] transition-colors hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] sm:block"

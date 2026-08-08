@@ -4,6 +4,7 @@ import { jobs } from "@/lib/jobs";
 import { companyInitials, formatDate, timeAgo } from "@/lib/utils";
 import { RegionBadge, SeniorityBadge, Chip } from "@/components/Badge";
 import JobCard from "@/components/JobCard";
+import JobTrackerPanel from "@/components/JobTrackerPanel";
 
 export function generateStaticParams() {
   return jobs.map((j) => ({ id: j.id }));
@@ -151,6 +152,8 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
               )}
             </div>
           </div>
+
+          <JobTrackerPanel jobId={job.id} />
         </div>
       </div>
 
