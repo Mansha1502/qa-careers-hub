@@ -1,0 +1,15 @@
+{
+  "permissions": {
+    "allow": [
+      "WebFetch(domain:qajobs.vercel.app)",
+      "mcp__claude_ai_Indeed__search_jobs",
+      "mcp__claude_ai_Indeed__get_job_details",
+      "WebSearch",
+      "WebFetch(domain:www.naukri.com)",
+      "WebFetch(domain:www.bayt.com)",
+      "WebFetch(domain:remoteok.com)",
+      "WebFetch(domain:weworkremotely.com)",
+      "Bash(npx --yes create-next-app@latest . --typescript --tailwind --eslint --app --src-dir --import-alias \"@/*\" --use-npm --yes)"
+    ]
+  }
+}
