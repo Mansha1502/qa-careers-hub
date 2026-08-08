@@ -19,4 +19,5 @@ export interface Job {
   applyUrl: string;
   hrEmail?: string;
   source: string;
+  live?: boolean;
 }
