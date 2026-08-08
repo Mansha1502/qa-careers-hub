@@ -7,13 +7,16 @@ import JobCard from "./JobCard";
 
 const REGIONS: (Region | "All")[] = ["All", "India", "UAE", "Remote"];
 type SortKey = "newest" | "oldest" | "company";
+type RefreshState = "idle" | "loading" | "done" | "error";
 
-export default function JobBoard({ jobs }: { jobs: Job[] }) {
+export default function JobBoard({ jobs: initialJobs }: { jobs: Job[] }) {
+  const [jobs, setJobs] = useState<Job[]>(initialJobs);
   const [region, setRegion] = useState<Region | "All">("All");
   const [seniorities, setSeniorities] = useState<Set<Seniority>>(new Set());
   const [query, setQuery] = useState("");
   const [sort, setSort] = useState<SortKey>("newest");
-  const [justRefreshed, setJustRefreshed] = useState(false);
+  const [refreshState, setRefreshState] = useState<RefreshState>("idle");
+  const [refreshMessage, setRefreshMessage] = useState("");
 
   function toggleSeniority(s: Seniority) {
     setSeniorities((prev) => {
@@ -24,9 +27,29 @@ export default function JobBoard({ jobs }: { jobs: Job[] }) {
     });
   }
 
-  function handleRefresh() {
-    setJustRefreshed(true);
-    window.setTimeout(() => setJustRefreshed(false), 3200);
+  async function handleRefresh() {
+    setRefreshState("loading");
+    try {
+      const res = await fetch("/api/jobs", { cache: "no-store" });
+      if (!res.ok) throw new Error("Request failed");
+      const data: { jobs: Job[]; updatedAt: string } = await res.json();
+
+      const previousIds = new Set(jobs.map((j) => j.id));
+      const newCount = data.jobs.filter((j) => !previousIds.has(j.id)).length;
+
+      setJobs(data.jobs);
+      setRefreshMessage(
+        newCount > 0
+          ? `Loaded ${newCount} new role${newCount === 1 ? "" : "s"} · ${data.jobs.length} total`
+          : `You're up to date · ${data.jobs.length} roles · snapshot ${data.updatedAt}`
+      );
+      setRefreshState("done");
+    } catch {
+      setRefreshMessage("Couldn't reach the server — check your connection and try again.");
+      setRefreshState("error");
+    } finally {
+      window.setTimeout(() => setRefreshState("idle"), 3600);
+    }
   }
 
   const filtered = useMemo(() => {
@@ -98,16 +121,32 @@ export default function JobBoard({ jobs }: { jobs: Job[] }) {
 
             <button
               onClick={handleRefresh}
-              title="Snapshot from August 8, 2026 — ask Claude to re-run sourcing for a newer batch"
-              className="relative inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm font-medium text-[var(--muted)] transition-colors hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)]"
+              disabled={refreshState === "loading"}
+              title="Re-check the server for the latest published listings"
+              className="relative inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm font-medium text-[var(--muted)] transition-colors hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] disabled:opacity-60"
             >
-              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <svg
+                width="15"
+                height="15"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                className={refreshState === "loading" ? "animate-spin" : ""}
+              >
                 <path d="M21 12a9 9 0 1 1-2.64-6.36M21 3v6h-6" strokeLinecap="round" strokeLinejoin="round" />
               </svg>
-              <span className="hidden sm:inline">Refresh</span>
-              {justRefreshed && (
+              <span className="hidden sm:inline">
+                {refreshState === "loading" ? "Refreshing…" : "Refresh"}
+              </span>
+              {refreshState === "done" && (
                 <span className="absolute -bottom-9 right-0 whitespace-nowrap rounded-lg border border-[var(--border)] bg-[var(--surface)] px-2.5 py-1.5 text-xs text-[var(--foreground)] shadow-lg">
-                  You&apos;re on the latest snapshot (Aug 8, 2026)
+                  {refreshMessage}
+                </span>
+              )}
+              {refreshState === "error" && (
+                <span className="absolute -bottom-9 right-0 whitespace-nowrap rounded-lg border border-red-300 bg-[var(--surface)] px-2.5 py-1.5 text-xs text-red-600 shadow-lg dark:border-red-800 dark:text-red-400">
+                  {refreshMessage}
                 </span>
               )}
             </button>
