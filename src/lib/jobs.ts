@@ -1665,6 +1665,27 @@ export const jobs: Job[] = [
     source: "ZipRecruiter",
   },
   {
+    id: "gitlab-enterprise-qa-engineer-salesforce",
+    title: "Enterprise QA Engineer, Salesforce",
+    company: "GitLab",
+    location: "Bangalore, India · Remote",
+    region: "India",
+    remote: true,
+    seniority: "Senior",
+    employmentType: "Full-time",
+    postedDate: "2026-08-05",
+    summary:
+      "Affirm the quality of GitLab's enterprise applications — especially CRM and Finance systems built on Salesforce — as part of an all-remote global team.",
+    highlights: [
+      "Focus on CRM and Finance systems quality, accuracy, and efficiency",
+      "Test enterprise applications supporting Sales and Finance workflows",
+      "All-remote company; AI-augmented workflows expected across the team",
+    ],
+    skills: ["Salesforce", "Enterprise Applications", "QA Testing"],
+    applyUrl: "https://job-boards.greenhouse.io/gitlab/jobs/8648964002",
+    source: "Greenhouse (GitLab)",
+  },
+  {
     id: "oxide-quality-manager-remote",
     title: "Quality Manager",
     company: "Oxide Computer Company",
