@@ -17,7 +17,7 @@ export default function StatsBar({ jobs }: { jobs: Job[] }) {
   ];
 
   return (
-    <div className="card-shadow-hover grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--border)] sm:grid-cols-6">
+    <div className="card-shadow grid grid-cols-3 gap-px overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--border)] sm:grid-cols-6">
       {stats.map((s) => (
         <div key={s.label} className="bg-[var(--surface)] px-4 py-5 text-center sm:px-3">
           <div

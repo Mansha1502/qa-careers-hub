@@ -28,8 +28,7 @@ export default function Home() {
             <h1 className="font-display mt-6 text-[2.75rem] font-medium leading-[1.05] tracking-tight text-[var(--foreground)] sm:text-6xl">
               Quality Assurance jobs,
               <br />
-              <span className="italic text-[var(--accent)]">curated</span> for
-              where you work.
+              curated for where you work.
             </h1>
 
             <p className="mt-6 max-w-lg text-[16.5px] leading-relaxed text-[var(--muted)] sm:text-lg">
@@ -61,7 +60,7 @@ export default function Home() {
       </section>
 
       <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-12 lg:px-8">
-        <div className="mb-10 -mt-[4.5rem] sm:-mt-20">
+        <div className="mb-10">
           <StatsBar jobs={jobs} />
         </div>
         <JobBoard jobs={jobs} />

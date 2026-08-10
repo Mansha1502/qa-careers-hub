@@ -7,6 +7,13 @@ import RecruiterCard from "@/components/RecruiterCard";
 const REGIONS: (HiringRegion | "All")[] = ["All", "Delhi", "UAE", "Remote"];
 const CATEGORIES: (RecruiterCategory | "All")[] = ["All", "Recruiting Agency", "IT Company"];
 
+const REGION_ORDER: HiringRegion[] = ["UAE", "Delhi", "Remote"];
+const REGION_LABELS: Record<HiringRegion, string> = {
+  UAE: "United Arab Emirates",
+  Delhi: "India · Delhi-NCR",
+  Remote: "Remote / Global",
+};
+
 export default function RecruitersPage() {
   const [region, setRegion] = useState<HiringRegion | "All">("All");
   const [category, setCategory] = useState<RecruiterCategory | "All">("All");
@@ -16,29 +23,34 @@ export default function RecruitersPage() {
   const agencyCount = recruiters.filter((r) => r.category === "Recruiting Agency").length;
   const companyCount = recruiters.filter((r) => r.category === "IT Company").length;
 
-  const filtered = useMemo(() => {
-    let result = recruiters.filter((r) => {
-      const regionMatch = region === "All" || r.hiresFor.includes(region);
-      const categoryMatch = category === "All" || r.category === category;
-      return regionMatch && categoryMatch;
-    });
+  const groups = useMemo(() => {
+    const q = query.trim().toLowerCase();
 
-    if (query.trim()) {
-      const q = query.trim().toLowerCase();
-      result = result.filter(
-        (r) =>
-          r.company.toLowerCase().includes(q) ||
-          r.location.toLowerCase().includes(q) ||
-          (r.contactType === "email" && r.contactValue.toLowerCase().includes(q))
+    function matches(r: (typeof recruiters)[number]) {
+      const categoryMatch = category === "All" || r.category === category;
+      if (!categoryMatch) return false;
+      if (!q) return true;
+      return (
+        r.company.toLowerCase().includes(q) ||
+        r.location.toLowerCase().includes(q) ||
+        (r.contactType === "email" && r.contactValue.toLowerCase().includes(q))
       );
     }
 
-    // Direct-email contacts first — they're the immediately actionable ones.
-    return [...result].sort((a, b) => {
-      if (a.contactType !== b.contactType) return a.contactType === "email" ? -1 : 1;
-      return a.company.localeCompare(b.company);
+    const regions = region === "All" ? REGION_ORDER : [region];
+
+    return regions.map((r) => {
+      const contacts = recruiters
+        .filter((c) => c.hiresFor.includes(r) && matches(c))
+        .sort((a, b) => {
+          if (a.contactType !== b.contactType) return a.contactType === "email" ? -1 : 1;
+          return a.company.localeCompare(b.company);
+        });
+      return { region: r, contacts };
     });
   }, [region, category, query]);
+
+  const totalShown = groups.reduce((sum, g) => sum + g.contacts.length, 0);
 
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
@@ -131,20 +143,36 @@ export default function RecruitersPage() {
       </div>
 
       <p className="mt-5 text-sm text-[var(--muted)]">
-        Showing <span className="font-medium text-[var(--foreground)]">{filtered.length}</span> of{" "}
-        {recruiters.length} contacts · direct emails shown first
+        Showing <span className="font-medium text-[var(--foreground)]">{totalShown}</span> contact
+        {totalShown === 1 ? "" : "s"} · grouped by country · direct emails shown first
       </p>
 
-      {filtered.length === 0 ? (
+      {totalShown === 0 ? (
         <div className="mt-4 flex flex-col items-center justify-center rounded-2xl border border-dashed border-[var(--border)] py-16 text-center">
           <p className="text-sm font-medium text-[var(--foreground)]">No contacts match those filters</p>
           <p className="mt-1 text-sm text-[var(--muted)]">Try clearing a filter or searching a different term.</p>
         </div>
       ) : (
-        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((r) => (
-            <RecruiterCard key={r.id} recruiter={r} />
-          ))}
+        <div className="mt-8 space-y-10">
+          {groups.map(({ region: r, contacts }) =>
+            contacts.length === 0 ? null : (
+              <div key={r}>
+                <div className="flex items-baseline gap-2.5 border-b border-[var(--border)] pb-3">
+                  <h2 className="font-display text-xl font-medium tracking-tight text-[var(--foreground)]">
+                    {REGION_LABELS[r]}
+                  </h2>
+                  <span className="text-[13px] text-[var(--muted-soft)]">
+                    {contacts.length} contact{contacts.length === 1 ? "" : "s"}
+                  </span>
+                </div>
+                <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+                  {contacts.map((r) => (
+                    <RecruiterCard key={r.id} recruiter={r} />
+                  ))}
+                </div>
+              </div>
+            )
+          )}
         </div>
       )}
 

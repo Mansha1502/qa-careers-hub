@@ -8,6 +8,7 @@ import JobCard from "./JobCard";
 const REGIONS: (Region | "All")[] = ["All", "India", "UAE", "Egypt", "Remote"];
 type SortKey = "newest" | "oldest" | "company";
 type RefreshState = "idle" | "loading" | "done" | "error";
+const PAGE_SIZE = 20;
 
 function dedupeJobs(jobs: Job[]): Job[] {
   const seen = new Set<string>();
@@ -28,6 +29,12 @@ export default function JobBoard({ jobs: initialJobs }: { jobs: Job[] }) {
   const [refreshState, setRefreshState] = useState<RefreshState>("idle");
   const [refreshMessage, setRefreshMessage] = useState("");
   const [liveUnconfigured, setLiveUnconfigured] = useState(false);
+  const [page, setPage] = useState(1);
+
+  function selectRegion(r: Region | "All") {
+    setRegion(r);
+    setPage(1);
+  }
 
   function toggleSeniority(s: Seniority) {
     setSeniorities((prev) => {
@@ -36,6 +43,7 @@ export default function JobBoard({ jobs: initialJobs }: { jobs: Job[] }) {
       else next.add(s);
       return next;
     });
+    setPage(1);
   }
 
   async function handleRefresh() {
@@ -65,6 +73,7 @@ export default function JobBoard({ jobs: initialJobs }: { jobs: Job[] }) {
       const liveCount = indiaLive.jobs.length + remoteLive.jobs.length;
 
       setJobs(merged);
+      setPage(1);
       if (!isConfigured) {
         setRefreshMessage(
           `Curated snapshot refreshed · ${staticData.jobs.length} roles. Live India/Remote refresh isn't configured yet.`
@@ -116,6 +125,15 @@ export default function JobBoard({ jobs: initialJobs }: { jobs: Job[] }) {
     return sorted;
   }, [jobs, region, seniorities, query, sort]);
 
+  const totalPages = Math.max(1, Math.ceil(filtered.length / PAGE_SIZE));
+  const currentPage = Math.min(page, totalPages);
+  const paginated = filtered.slice((currentPage - 1) * PAGE_SIZE, currentPage * PAGE_SIZE);
+
+  function goToPage(p: number) {
+    setPage(p);
+    document.getElementById("jobs")?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }
+
   return (
     <div id="jobs" className="scroll-mt-20">
       <div className="card-shadow flex flex-col gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5">
@@ -135,7 +153,10 @@ export default function JobBoard({ jobs: initialJobs }: { jobs: Job[] }) {
             <input
               type="text"
               value={query}
-              onChange={(e) => setQuery(e.target.value)}
+              onChange={(e) => {
+                setQuery(e.target.value);
+                setPage(1);
+              }}
               placeholder="Search by title, company, or skill (e.g. Playwright, Selenium)"
               className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] py-2.5 pl-10 pr-4 text-[14px] text-[var(--foreground)] placeholder:text-[var(--muted-soft)] outline-none ring-[var(--ring)] transition-shadow focus:ring-2"
             />
@@ -144,7 +165,10 @@ export default function JobBoard({ jobs: initialJobs }: { jobs: Job[] }) {
           <div className="flex items-center gap-2">
             <select
               value={sort}
-              onChange={(e) => setSort(e.target.value as SortKey)}
+              onChange={(e) => {
+                setSort(e.target.value as SortKey);
+                setPage(1);
+              }}
               className="rounded-xl border border-[var(--border)] bg-[var(--background)] px-3 py-2.5 text-[14px] text-[var(--foreground)] outline-none ring-[var(--ring)] focus:ring-2"
             >
               <option value="newest">Newest first</option>
@@ -205,7 +229,7 @@ export default function JobBoard({ jobs: initialJobs }: { jobs: Job[] }) {
           {REGIONS.map((r) => (
             <button
               key={r}
-              onClick={() => setRegion(r)}
+              onClick={() => selectRegion(r)}
               className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
                 region === r
                   ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
@@ -239,8 +263,12 @@ export default function JobBoard({ jobs: initialJobs }: { jobs: Job[] }) {
 
       <div className="mt-5 flex items-center justify-between">
         <p className="text-sm text-[var(--muted)]">
-          Showing <span className="font-medium text-[var(--foreground)]">{filtered.length}</span>{" "}
-          of {jobs.length} roles
+          Showing{" "}
+          <span className="font-medium text-[var(--foreground)]">
+            {filtered.length === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1}–
+            {Math.min(currentPage * PAGE_SIZE, filtered.length)}
+          </span>{" "}
+          of {filtered.length} roles
         </p>
       </div>
 
@@ -250,11 +278,41 @@ export default function JobBoard({ jobs: initialJobs }: { jobs: Job[] }) {
           <p className="mt-1 text-sm text-[var(--muted)]">Try clearing a filter or searching a different term.</p>
         </div>
       ) : (
-        <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
-          {filtered.map((job) => (
-            <JobCard key={job.id} job={job} />
-          ))}
-        </div>
+        <>
+          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {paginated.map((job) => (
+              <JobCard key={job.id} job={job} />
+            ))}
+          </div>
+
+          {totalPages > 1 && (
+            <div className="mt-8 flex items-center justify-center gap-3">
+              <button
+                onClick={() => goToPage(currentPage - 1)}
+                disabled={currentPage <= 1}
+                className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--surface-hover)] disabled:pointer-events-none disabled:opacity-40"
+              >
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+                Previous
+              </button>
+              <span className="text-sm text-[var(--muted)]">
+                Page <span className="font-medium text-[var(--foreground)]">{currentPage}</span> of {totalPages}
+              </span>
+              <button
+                onClick={() => goToPage(currentPage + 1)}
+                disabled={currentPage >= totalPages}
+                className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border)] px-4 py-2 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--surface-hover)] disabled:pointer-events-none disabled:opacity-40"
+              >
+                Next
+                <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <path d="M9 18l6-6-6-6" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              </button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );
