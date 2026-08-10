@@ -8,7 +8,7 @@ import JobCard from "./JobCard";
 const REGIONS: (Region | "All")[] = ["All", "India", "UAE", "Egypt", "Remote"];
 type SortKey = "newest" | "oldest" | "company";
 type RefreshState = "idle" | "loading" | "done" | "error";
-const PAGE_SIZE = 20;
+const PAGE_SIZE = 18;
 
 function dedupeJobs(jobs: Job[]): Job[] {
   const seen = new Set<string>();

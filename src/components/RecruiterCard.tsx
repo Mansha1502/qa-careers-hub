@@ -4,7 +4,8 @@ import { companyInitials } from "@/lib/utils";
 const regionStyles: Record<string, string> = {
   Remote: "bg-sky-50 text-sky-700 dark:bg-sky-500/10 dark:text-sky-400",
   UAE: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400",
-  Delhi: "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400",
+  India: "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400",
+  Egypt: "bg-violet-50 text-violet-700 dark:bg-violet-500/10 dark:text-violet-400",
 };
 
 export default function RecruiterCard({ recruiter }: { recruiter: RecruiterContact }) {

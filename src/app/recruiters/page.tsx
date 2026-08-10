@@ -4,13 +4,14 @@ import { useMemo, useState } from "react";
 import { recruiters, HiringRegion, RecruiterCategory } from "@/lib/recruiters";
 import RecruiterCard from "@/components/RecruiterCard";
 
-const REGIONS: (HiringRegion | "All")[] = ["All", "Delhi", "UAE", "Remote"];
+const REGIONS: (HiringRegion | "All")[] = ["All", "India", "UAE", "Egypt", "Remote"];
 const CATEGORIES: (RecruiterCategory | "All")[] = ["All", "Recruiting Agency", "IT Company"];
 
-const REGION_ORDER: HiringRegion[] = ["UAE", "Delhi", "Remote"];
+const REGION_ORDER: HiringRegion[] = ["UAE", "India", "Egypt", "Remote"];
 const REGION_LABELS: Record<HiringRegion, string> = {
   UAE: "United Arab Emirates",
-  Delhi: "India · Delhi-NCR",
+  India: "India",
+  Egypt: "Egypt",
   Remote: "Remote / Global",
 };
 
@@ -58,9 +59,9 @@ export default function RecruitersPage() {
         Recruiter Contacts
       </h1>
       <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[var(--muted)]">
-        Recruiting agencies and IT companies actively hiring for Remote, UAE, or
-        Delhi-NCR roles. Every contact is verified against the company&apos;s own
-        site or a real job posting we sourced — never guessed.
+        Recruiting agencies and IT companies actively hiring for Remote, UAE,
+        Egypt, or India roles. Every contact is verified against the company&apos;s
+        own site or a real job posting we sourced — never guessed.
       </p>
 
       <div className="mt-7 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--border)] sm:grid-cols-4">
