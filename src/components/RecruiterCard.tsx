@@ -1,3 +1,6 @@
+"use client";
+
+import { useState } from "react";
 import { RecruiterContact } from "@/lib/recruiters";
 import { companyInitials } from "@/lib/utils";
 
@@ -9,6 +12,16 @@ const regionStyles: Record<string, string> = {
 };
 
 export default function RecruiterCard({ recruiter }: { recruiter: RecruiterContact }) {
+  const [copied, setCopied] = useState(false);
+
+  function copyEmail(e: React.MouseEvent) {
+    e.preventDefault();
+    e.stopPropagation();
+    navigator.clipboard.writeText(recruiter.contactValue);
+    setCopied(true);
+    window.setTimeout(() => setCopied(false), 1800);
+  }
+
   return (
     <div className="card-shadow flex flex-col gap-3.5 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 transition-all duration-200 hover:card-shadow-hover hover:-translate-y-[3px] hover:border-[var(--border-strong)]">
       <div className="flex items-center gap-3">
@@ -43,16 +56,35 @@ export default function RecruiterCard({ recruiter }: { recruiter: RecruiterConta
 
       <div className="mt-auto pt-1">
         {recruiter.contactType === "email" ? (
-          <a
-            href={`mailto:${recruiter.contactValue}`}
-            className="flex items-center gap-2 rounded-xl border border-[var(--border)] px-3 py-2.5 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--surface-hover)]"
-          >
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0 text-[var(--accent)]">
-              <path d="M3 6h18v12H3z" strokeLinejoin="round" />
-              <path d="m3 7 9 6 9-6" strokeLinejoin="round" />
-            </svg>
-            <span className="truncate">{recruiter.contactValue}</span>
-          </a>
+          <div className="flex gap-1.5">
+            <a
+              href={`mailto:${recruiter.contactValue}`}
+              className="flex min-w-0 flex-1 items-center gap-2 rounded-xl border border-[var(--border)] px-3 py-2.5 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--surface-hover)]"
+            >
+              <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0 text-[var(--accent)]">
+                <path d="M3 6h18v12H3z" strokeLinejoin="round" />
+                <path d="m3 7 9 6 9-6" strokeLinejoin="round" />
+              </svg>
+              <span className="truncate">{recruiter.contactValue}</span>
+            </a>
+            <button
+              onClick={copyEmail}
+              aria-label="Copy email address"
+              title={copied ? "Copied!" : "Copy email address"}
+              className="flex shrink-0 items-center justify-center rounded-xl border border-[var(--border)] px-3 text-[var(--muted)] transition-colors hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)]"
+            >
+              {copied ? (
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="text-emerald-600 dark:text-emerald-400">
+                  <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              ) : (
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+                  <rect x="9" y="9" width="12" height="12" rx="2" />
+                  <path d="M5 15H4a1 1 0 0 1-1-1V4a1 1 0 0 1 1-1h10a1 1 0 0 1 1 1v1" strokeLinecap="round" strokeLinejoin="round" />
+                </svg>
+              )}
+            </button>
+          </div>
         ) : (
           <a
             href={recruiter.contactValue}

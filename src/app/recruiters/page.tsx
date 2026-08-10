@@ -1,8 +1,16 @@
 "use client";
 
 import { useMemo, useState } from "react";
-import { recruiters, HiringRegion, RecruiterCategory } from "@/lib/recruiters";
+import { recruiters, HiringRegion, RecruiterCategory, RecruiterContact } from "@/lib/recruiters";
 import RecruiterCard from "@/components/RecruiterCard";
+
+function csvCell(value: string): string {
+  return /[",\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
+}
+
+function toCsv(rows: string[][]): string {
+  return rows.map((row) => row.map(csvCell).join(",")).join("\n");
+}
 
 const REGIONS: (HiringRegion | "All")[] = ["All", "India", "UAE", "Egypt", "Remote"];
 const CATEGORIES: (RecruiterCategory | "All")[] = ["All", "Recruiting Agency", "IT Company"];
@@ -53,6 +61,41 @@ export default function RecruitersPage() {
 
   const totalShown = groups.reduce((sum, g) => sum + g.contacts.length, 0);
 
+  const uniqueContacts = useMemo(() => {
+    const seen = new Map<string, RecruiterContact>();
+    groups.forEach((g) => g.contacts.forEach((c) => seen.set(c.id, c)));
+    return Array.from(seen.values());
+  }, [groups]);
+
+  function handleExport() {
+    const rows: string[][] = [
+      ["Company", "Category", "Regions", "Location", "Contact Type", "Contact Value", "Contact Label", "Notes"],
+      ...uniqueContacts.map((c) => [
+        c.company,
+        c.category,
+        c.hiresFor.join(" | "),
+        c.location,
+        c.contactType === "email" ? "Email" : "Careers Page",
+        c.contactValue,
+        c.contactLabel ?? "",
+        c.note ?? "",
+      ]),
+    ];
+    const csv = toCsv(rows);
+    const blob = new Blob([csv], { type: "text/csv;charset=utf-8;" });
+    const url = URL.createObjectURL(blob);
+    const regionSlug = region === "All" ? "all-regions" : region.toLowerCase();
+    const categorySlug = category === "All" ? "all-categories" : category.toLowerCase().replace(/\s+/g, "-");
+    const date = new Date().toISOString().slice(0, 10);
+    const a = document.createElement("a");
+    a.href = url;
+    a.download = `qa-careers-hub-recruiters-${regionSlug}-${categorySlug}-${date}.csv`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  }
+
   return (
     <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
       <h1 className="font-display text-[2.1rem] font-medium tracking-tight text-[var(--foreground)] sm:text-4xl">
@@ -92,24 +135,38 @@ export default function RecruitersPage() {
       </div>
 
       <div className="card-shadow mt-6 flex flex-col gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5">
-        <div className="relative">
-          <svg
-            className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted-soft)]"
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="2"
+        <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
+          <div className="relative flex-1">
+            <svg
+              className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted-soft)]"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
+              strokeWidth="2"
+            >
+              <circle cx="11" cy="11" r="7" />
+              <path d="m21 21-4.3-4.3" strokeLinecap="round" />
+            </svg>
+            <input
+              type="text"
+              value={query}
+              onChange={(e) => setQuery(e.target.value)}
+              placeholder="Search by company, location, or email"
+              className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] py-2.5 pl-10 pr-4 text-[14px] text-[var(--foreground)] placeholder:text-[var(--muted-soft)] outline-none ring-[var(--ring)] focus:ring-2"
+            />
+          </div>
+
+          <button
+            onClick={handleExport}
+            disabled={totalShown === 0}
+            title="Export the currently filtered contacts as a CSV file"
+            className="inline-flex shrink-0 items-center justify-center gap-1.5 rounded-xl border border-[var(--border)] px-3.5 py-2.5 text-[14px] font-medium text-[var(--muted)] transition-colors hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] disabled:pointer-events-none disabled:opacity-40"
           >
-            <circle cx="11" cy="11" r="7" />
-            <path d="m21 21-4.3-4.3" strokeLinecap="round" />
-          </svg>
-          <input
-            type="text"
-            value={query}
-            onChange={(e) => setQuery(e.target.value)}
-            placeholder="Search by company, location, or email"
-            className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] py-2.5 pl-10 pr-4 text-[14px] text-[var(--foreground)] placeholder:text-[var(--muted-soft)] outline-none ring-[var(--ring)] focus:ring-2"
-          />
+            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
+              <path d="M12 3v12m0 0-4-4m4 4 4-4M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2" strokeLinecap="round" strokeLinejoin="round" />
+            </svg>
+            Export CSV
+          </button>
         </div>
 
         <div className="flex flex-wrap items-center gap-1.5">
