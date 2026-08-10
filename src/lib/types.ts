@@ -1,4 +1,4 @@
-export type Region = "India" | "UAE" | "Remote";
+export type Region = "India" | "UAE" | "Egypt" | "Remote";
 
 export type Seniority = "Engineer" | "Senior" | "Lead" | "Manager" | "Director";
 

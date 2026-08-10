@@ -4,15 +4,15 @@ export const metadata = {
 
 export default function AboutPage() {
   return (
-    <div className="mx-auto max-w-2xl px-4 py-14 sm:px-6 lg:px-8">
-      <h1 className="text-3xl font-semibold tracking-tight text-[var(--foreground)]">
+    <div className="mx-auto max-w-2xl px-4 py-14 sm:px-6 sm:py-20 lg:px-8">
+      <h1 className="font-display text-[2.1rem] font-medium tracking-tight text-[var(--foreground)] sm:text-4xl">
         About QA Careers Hub
       </h1>
-      <div className="mt-6 space-y-4 text-[15px] leading-relaxed text-[var(--muted)]">
+      <div className="mt-7 space-y-4 text-[15.5px] leading-relaxed text-[var(--muted)]">
         <p>
           QA Careers Hub is a focused job board for Quality Assurance roles —
           from QA Engineer through Director of Quality Assurance — across
-          three tracks: India, the UAE, and remote positions open to
+          four tracks: India, the UAE, Egypt, and remote positions open to
           candidates globally.
         </p>
         <p>
@@ -28,8 +28,8 @@ export default function AboutPage() {
           or change, so always confirm current status on the original page
           before applying.
         </p>
-        <p className="pt-2 text-[var(--foreground)]">
-          Built by <span className="font-medium">Mansha Mehraj</span>.
+        <p className="pt-3 text-[15px] text-[var(--foreground)]">
+          Built by <span className="font-display italic text-[var(--accent)]">Mansha Mehraj</span>.
         </p>
       </div>
     </div>

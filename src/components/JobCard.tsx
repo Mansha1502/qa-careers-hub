@@ -24,12 +24,12 @@ export default function JobCard({ job }: { job: Job }) {
   return (
     <Link
       href={`/jobs/${job.id}`}
-      className="group relative flex flex-col gap-3.5 rounded-xl border border-[var(--border)] bg-[var(--surface)] p-5 transition-all hover:-translate-y-0.5 hover:border-[var(--accent)]/40 hover:shadow-lg hover:shadow-black/[0.03]"
+      className="card-shadow group relative flex flex-col gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5 transition-all duration-200 hover:card-shadow-hover hover:-translate-y-[3px] hover:border-[var(--border-strong)]"
     >
       <button
         onClick={toggleSave}
         aria-label={entry ? "Remove from tracker" : "Save to tracker"}
-        className="absolute right-4 top-4 flex h-7 w-7 items-center justify-center rounded-md text-[var(--muted)] transition-colors hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)]"
+        className="absolute right-4 top-4 flex h-8 w-8 items-center justify-center rounded-full text-[var(--muted-soft)] transition-colors hover:bg-[var(--surface-hover)] hover:text-[var(--accent)]"
       >
         <svg
           width="15"
@@ -44,17 +44,15 @@ export default function JobCard({ job }: { job: Job }) {
         </svg>
       </button>
 
-      <div className="flex items-start justify-between gap-3 pr-8">
-        <div className="flex items-center gap-3">
-          <span className="flex h-10 w-10 shrink-0 items-center justify-center rounded-lg bg-[var(--accent-soft)] text-sm font-semibold text-[var(--accent)]">
-            {companyInitials(job.company)}
-          </span>
-          <div className="min-w-0">
-            <h3 className="truncate text-[15px] font-semibold text-[var(--foreground)] group-hover:text-[var(--accent)]">
-              {job.title}
-            </h3>
-            <p className="truncate text-sm text-[var(--muted)]">{job.company}</p>
-          </div>
+      <div className="flex items-start gap-3 pr-8">
+        <span className="flex h-11 w-11 shrink-0 items-center justify-center rounded-xl bg-[var(--accent-soft)] text-[13px] font-semibold text-[var(--accent)]">
+          {companyInitials(job.company)}
+        </span>
+        <div className="min-w-0 pt-0.5">
+          <h3 className="font-display truncate text-[16.5px] font-medium leading-snug text-[var(--foreground)] transition-colors group-hover:text-[var(--accent)]">
+            {job.title}
+          </h3>
+          <p className="truncate text-[13.5px] text-[var(--muted)]">{job.company}</p>
         </div>
       </div>
 
@@ -62,28 +60,41 @@ export default function JobCard({ job }: { job: Job }) {
         <RegionBadge region={job.region} />
         <SeniorityBadge seniority={job.seniority} />
         {job.remote && (
-          <span className="inline-flex items-center rounded-full border border-[var(--border)] px-2.5 py-1 text-xs font-medium text-[var(--muted)]">
+          <span className="inline-flex items-center rounded-full border border-[var(--border)] px-2.5 py-1 text-[11px] font-medium text-[var(--muted)]">
             Remote-friendly
           </span>
         )}
         {job.live && (
-          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-1 text-xs font-medium text-emerald-600 dark:text-emerald-400">
+          <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
             Live
           </span>
         )}
       </div>
 
-      <p className="line-clamp-2 text-sm leading-relaxed text-[var(--muted)]">{job.summary}</p>
+      <p className="line-clamp-2 text-[13.5px] leading-relaxed text-[var(--muted)]">{job.summary}</p>
 
-      <div className="mt-auto flex items-center justify-between gap-3 border-t border-[var(--border)] pt-3.5 text-xs text-[var(--muted)]">
+      {job.skills.length > 0 && (
+        <div className="flex flex-wrap gap-1.5">
+          {job.skills.slice(0, 3).map((skill) => (
+            <span
+              key={skill}
+              className="rounded-md bg-[var(--background-alt)] px-2 py-1 text-[11px] font-medium text-[var(--muted)]"
+            >
+              {skill}
+            </span>
+          ))}
+        </div>
+      )}
+
+      <div className="mt-auto flex items-center justify-between gap-3 border-t border-[var(--border)] pt-3.5 text-[11.5px] text-[var(--muted-soft)]">
         <span className="truncate">{job.location}</span>
         <span className="shrink-0">{timeAgo(job.postedDate)}</span>
       </div>
 
       {hydrated && entry && (
         <span
-          className={`absolute -top-2 left-4 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium shadow-sm ${STATUS_STYLES[entry.status].bg} ${STATUS_STYLES[entry.status].text}`}
+          className={`absolute -top-2.5 left-4 inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-[11px] font-medium shadow-sm ${STATUS_STYLES[entry.status].bg} ${STATUS_STYLES[entry.status].text}`}
         >
           <span className={`h-1.5 w-1.5 rounded-full ${STATUS_STYLES[entry.status].dot}`} />
           {STATUS_LABELS[entry.status]}

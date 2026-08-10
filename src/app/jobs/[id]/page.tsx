@@ -30,10 +30,10 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
     .slice(0, 3);
 
   return (
-    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
+    <div className="mx-auto max-w-5xl px-4 py-8 sm:px-6 sm:py-12 lg:px-8">
       <Link
         href="/#jobs"
-        className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--muted)] hover:text-[var(--foreground)]"
+        className="inline-flex items-center gap-1.5 text-sm font-medium text-[var(--muted)] transition-colors hover:text-[var(--foreground)]"
       >
         <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
           <path d="M15 18l-6-6 6-6" strokeLinecap="round" strokeLinejoin="round" />
@@ -41,18 +41,18 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
         Back to all jobs
       </Link>
 
-      <div className="mt-5 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_340px]">
+      <div className="mt-6 grid grid-cols-1 gap-8 lg:grid-cols-[1fr_340px]">
         {/* Main column */}
         <div>
           <div className="flex items-start gap-4">
-            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-xl bg-[var(--accent-soft)] text-lg font-semibold text-[var(--accent)]">
+            <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-[var(--accent-soft)] text-lg font-semibold text-[var(--accent)]">
               {companyInitials(job.company)}
             </span>
-            <div>
-              <h1 className="text-2xl font-semibold tracking-tight text-[var(--foreground)] sm:text-3xl">
+            <div className="pt-1">
+              <h1 className="font-display text-[1.75rem] font-medium leading-[1.15] tracking-tight text-[var(--foreground)] sm:text-3xl">
                 {job.title}
               </h1>
-              <p className="mt-1 text-base text-[var(--muted)]">{job.company}</p>
+              <p className="mt-1.5 text-[15px] text-[var(--muted)]">{job.company}</p>
             </div>
           </div>
 
@@ -63,42 +63,34 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
             {job.remote && <Chip>Remote-friendly</Chip>}
           </div>
 
-          <p className="mt-6 text-[15px] leading-relaxed text-[var(--foreground)]">{job.summary}</p>
+          <p className="mt-6 text-[15.5px] leading-relaxed text-[var(--foreground)]">{job.summary}</p>
 
-          <div className="mt-8">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--muted)]">
+          <div className="mt-9">
+            <h2 className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-soft)]">
               Role highlights
             </h2>
-            <ul className="mt-3 space-y-2.5">
+            <ul className="mt-3.5 space-y-3">
               {job.highlights.map((h, i) => (
-                <li key={i} className="flex items-start gap-2.5 text-[15px] leading-relaxed text-[var(--foreground)]">
-                  <svg
-                    className="mt-1 h-3.5 w-3.5 shrink-0 text-[var(--accent)]"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2.5"
-                  >
-                    <path d="M20 6 9 17l-5-5" strokeLinecap="round" strokeLinejoin="round" />
-                  </svg>
+                <li key={i} className="flex items-start gap-3 text-[15px] leading-relaxed text-[var(--foreground)]">
+                  <span className="mt-2 h-1.5 w-1.5 shrink-0 rounded-full bg-[var(--accent)]" />
                   {h}
                 </li>
               ))}
             </ul>
           </div>
 
-          <div className="mt-8">
-            <h2 className="text-sm font-semibold uppercase tracking-wide text-[var(--muted)]">
+          <div className="mt-9">
+            <h2 className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-soft)]">
               Skills &amp; tools
             </h2>
-            <div className="mt-3 flex flex-wrap gap-1.5">
+            <div className="mt-3.5 flex flex-wrap gap-1.5">
               {job.skills.map((s) => (
                 <Chip key={s}>{s}</Chip>
               ))}
             </div>
           </div>
 
-          <div className="mt-8 rounded-xl border border-dashed border-[var(--border)] bg-[var(--surface)] p-4 text-xs leading-relaxed text-[var(--muted)]">
+          <div className="mt-9 rounded-2xl border border-dashed border-[var(--border)] bg-[var(--background-alt)] p-4 text-[12.5px] leading-relaxed text-[var(--muted)]">
             Sourced via {job.source} on {formatDate(job.postedDate)}. Job details can change
             or postings can close at any time — please verify current status,
             full requirements, and your eligibility on the original listing before
@@ -108,12 +100,12 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
 
         {/* Sidebar */}
         <div className="h-fit space-y-4 lg:sticky lg:top-24">
-          <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
+          <div className="card-shadow rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
             <a
               href={job.applyUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="flex w-full items-center justify-center gap-2 rounded-lg bg-[var(--accent)] px-4 py-3 text-sm font-semibold text-[var(--accent-foreground)] transition-colors hover:bg-[var(--accent-hover)]"
+              className="flex w-full items-center justify-center gap-2 rounded-xl bg-[var(--accent)] px-4 py-3 text-sm font-semibold text-[var(--accent-foreground)] transition-all hover:-translate-y-0.5 hover:bg-[var(--accent-hover)]"
             >
               Apply to this role
               <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
@@ -129,13 +121,13 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
             </div>
 
             <div className="mt-4 border-t border-[var(--border)] pt-4">
-              <p className="text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">
+              <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-soft)]">
                 HR / recruiter contact
               </p>
               {job.hrEmail ? (
                 <a
                   href={`mailto:${job.hrEmail}`}
-                  className="mt-2 flex items-center gap-2 rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--surface-hover)]"
+                  className="mt-2.5 flex items-center gap-2 rounded-xl border border-[var(--border)] px-3 py-2.5 text-sm font-medium text-[var(--foreground)] transition-colors hover:bg-[var(--surface-hover)]"
                 >
                   <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" className="shrink-0 text-[var(--accent)]">
                     <path d="M3 6h18v12H3z" strokeLinejoin="round" />
@@ -144,7 +136,7 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
                   <span className="truncate">{job.hrEmail}</span>
                 </a>
               ) : (
-                <p className="mt-2 text-sm leading-relaxed text-[var(--muted)]">
+                <p className="mt-2.5 text-[13.5px] leading-relaxed text-[var(--muted)]">
                   No direct HR email is publicly listed for this role — apply via
                   the button above, which takes you straight to the official
                   posting.
@@ -158,11 +150,11 @@ export default async function JobDetailPage({ params }: { params: Promise<{ id: 
       </div>
 
       {related.length > 0 && (
-        <div className="mt-14">
-          <h2 className="text-lg font-semibold tracking-tight text-[var(--foreground)]">
+        <div className="mt-16">
+          <h2 className="font-display text-xl font-medium tracking-tight text-[var(--foreground)]">
             More roles you might like
           </h2>
-          <div className="mt-4 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
+          <div className="mt-5 grid grid-cols-1 gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {related.map((j) => (
               <JobCard key={j.id} job={j} />
             ))}

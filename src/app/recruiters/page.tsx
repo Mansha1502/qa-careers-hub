@@ -41,47 +41,47 @@ export default function RecruitersPage() {
   }, [region, category, query]);
 
   return (
-    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-14 lg:px-8">
-      <h1 className="text-3xl font-semibold tracking-tight text-[var(--foreground)]">
+    <div className="mx-auto max-w-7xl px-4 py-10 sm:px-6 sm:py-16 lg:px-8">
+      <h1 className="font-display text-[2.1rem] font-medium tracking-tight text-[var(--foreground)] sm:text-4xl">
         Recruiter Contacts
       </h1>
-      <p className="mt-2 max-w-2xl text-sm leading-relaxed text-[var(--muted)]">
+      <p className="mt-3 max-w-2xl text-[15px] leading-relaxed text-[var(--muted)]">
         Recruiting agencies and IT companies actively hiring for Remote, UAE, or
         Delhi-NCR roles. Every contact is verified against the company&apos;s own
         site or a real job posting we sourced — never guessed.
       </p>
 
-      <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4">
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3.5 text-center">
-          <div className="text-2xl font-semibold tracking-tight text-[var(--foreground)]">
+      <div className="mt-7 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--border)] sm:grid-cols-4">
+        <div className="bg-[var(--surface)] px-4 py-4 text-center">
+          <div className="font-display text-2xl font-medium tracking-tight text-[var(--foreground)]">
             {recruiters.length}
           </div>
-          <div className="mt-0.5 text-xs font-medium text-[var(--muted)]">Total contacts</div>
+          <div className="mt-0.5 text-[11.5px] font-medium text-[var(--muted)]">Total contacts</div>
         </div>
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3.5 text-center">
-          <div className="text-2xl font-semibold tracking-tight text-emerald-600 dark:text-emerald-400">
+        <div className="bg-[var(--surface)] px-4 py-4 text-center">
+          <div className="font-display text-2xl font-medium tracking-tight text-emerald-600 dark:text-emerald-400">
             {emailCount}
           </div>
-          <div className="mt-0.5 text-xs font-medium text-[var(--muted)]">Direct emails</div>
+          <div className="mt-0.5 text-[11.5px] font-medium text-[var(--muted)]">Direct emails</div>
         </div>
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3.5 text-center">
-          <div className="text-2xl font-semibold tracking-tight text-[var(--foreground)]">
+        <div className="bg-[var(--surface)] px-4 py-4 text-center">
+          <div className="font-display text-2xl font-medium tracking-tight text-[var(--foreground)]">
             {agencyCount}
           </div>
-          <div className="mt-0.5 text-xs font-medium text-[var(--muted)]">Recruiting agencies</div>
+          <div className="mt-0.5 text-[11.5px] font-medium text-[var(--muted)]">Recruiting agencies</div>
         </div>
-        <div className="rounded-xl border border-[var(--border)] bg-[var(--surface)] px-4 py-3.5 text-center">
-          <div className="text-2xl font-semibold tracking-tight text-[var(--foreground)]">
+        <div className="bg-[var(--surface)] px-4 py-4 text-center">
+          <div className="font-display text-2xl font-medium tracking-tight text-[var(--foreground)]">
             {companyCount}
           </div>
-          <div className="mt-0.5 text-xs font-medium text-[var(--muted)]">IT companies</div>
+          <div className="mt-0.5 text-[11.5px] font-medium text-[var(--muted)]">IT companies</div>
         </div>
       </div>
 
-      <div className="mt-6 flex flex-col gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5">
+      <div className="card-shadow mt-6 flex flex-col gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5">
         <div className="relative">
           <svg
-            className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]"
+            className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted-soft)]"
             viewBox="0 0 24 24"
             fill="none"
             stroke="currentColor"
@@ -95,7 +95,7 @@ export default function RecruitersPage() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Search by company, location, or email"
-            className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] py-2.5 pl-10 pr-4 text-sm text-[var(--foreground)] placeholder:text-[var(--muted)] outline-none ring-[var(--ring)] focus:ring-2"
+            className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] py-2.5 pl-10 pr-4 text-[14px] text-[var(--foreground)] placeholder:text-[var(--muted-soft)] outline-none ring-[var(--ring)] focus:ring-2"
           />
         </div>
 
@@ -148,7 +148,7 @@ export default function RecruitersPage() {
         </div>
       )}
 
-      <div className="mt-8 rounded-xl border border-dashed border-[var(--border)] bg-[var(--surface)] p-4 text-xs leading-relaxed text-[var(--muted)]">
+      <div className="mt-9 rounded-2xl border border-dashed border-[var(--border)] bg-[var(--background-alt)] p-4 text-[12.5px] leading-relaxed text-[var(--muted)]">
         We never invent recruiter emails. Where a company doesn&apos;t publish one
         (true for most large corporates, who route hiring entirely through their
         applicant portal), we link to their official careers page instead of

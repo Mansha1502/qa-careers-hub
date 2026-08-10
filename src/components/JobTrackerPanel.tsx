@@ -29,29 +29,29 @@ export default function JobTrackerPanel({ jobId }: { jobId: string }) {
 
   if (!hydrated) {
     return (
-      <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
+      <div className="card-shadow rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
         <div className="h-5 w-32 animate-pulse rounded bg-[var(--surface-hover)]" />
       </div>
     );
   }
 
   return (
-    <div className="rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
+    <div className="card-shadow rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-5">
       <div className="flex items-center justify-between">
-        <p className="text-xs font-semibold uppercase tracking-wide text-[var(--muted)]">
+        <p className="text-[11px] font-semibold uppercase tracking-wider text-[var(--muted-soft)]">
           My tracker
         </p>
         {entry && (
           <button
             onClick={() => remove(jobId)}
-            className="text-xs font-medium text-[var(--muted)] hover:text-red-600 dark:hover:text-red-400"
+            className="text-xs font-medium text-[var(--muted)] transition-colors hover:text-red-600 dark:hover:text-red-400"
           >
             Remove
           </button>
         )}
       </div>
 
-      <div className="mt-3 flex flex-wrap gap-1.5">
+      <div className="mt-3.5 flex flex-wrap gap-1.5">
         {STATUS_ORDER.map((status) => {
           const active = entry?.status === status;
           const styles = STATUS_STYLES[status];
@@ -73,7 +73,7 @@ export default function JobTrackerPanel({ jobId }: { jobId: string }) {
       </div>
 
       {entry && (
-        <div className="mt-4 space-y-3 border-t border-[var(--border)] pt-4">
+        <div className="mt-4 space-y-3.5 border-t border-[var(--border)] pt-4">
           <div>
             <label htmlFor="followup" className="text-xs font-medium text-[var(--muted)]">
               Follow-up date
@@ -83,7 +83,7 @@ export default function JobTrackerPanel({ jobId }: { jobId: string }) {
               type="date"
               value={entry.followUpDate ?? ""}
               onChange={(e) => setFollowUpDate(jobId, e.target.value || undefined)}
-              className="mt-1.5 w-full rounded-lg border border-[var(--border)] bg-[var(--background)] px-3 py-2 text-sm text-[var(--foreground)] outline-none ring-[var(--ring)] focus:ring-2"
+              className="mt-1.5 w-full rounded-xl border border-[var(--border)] bg-[var(--background)] px-3 py-2 text-sm text-[var(--foreground)] outline-none ring-[var(--ring)] focus:ring-2"
             />
           </div>
 
@@ -101,7 +101,7 @@ export default function JobTrackerPanel({ jobId }: { jobId: string }) {
               onBlur={handleNotesBlur}
               rows={4}
               placeholder="Recruiter contact, interview prep, referral name..."
-              className="mt-1.5 w-full resize-none rounded-lg border border-[var(--border)] bg-[var(--background)] px-3 py-2 text-sm text-[var(--foreground)] placeholder:text-[var(--muted)] outline-none ring-[var(--ring)] focus:ring-2"
+              className="mt-1.5 w-full resize-none rounded-xl border border-[var(--border)] bg-[var(--background)] px-3 py-2 text-sm text-[var(--foreground)] placeholder:text-[var(--muted-soft)] outline-none ring-[var(--ring)] focus:ring-2"
             />
           </div>
         </div>

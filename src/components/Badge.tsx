@@ -3,16 +3,18 @@ import { ReactNode } from "react";
 export function RegionBadge({
   region,
 }: {
-  region: "India" | "UAE" | "Remote";
+  region: "India" | "UAE" | "Egypt" | "Remote";
 }) {
   const styles = {
     India: "bg-amber-50 text-amber-700 dark:bg-amber-500/10 dark:text-amber-400",
     UAE: "bg-emerald-50 text-emerald-700 dark:bg-emerald-500/10 dark:text-emerald-400",
+    Egypt: "bg-violet-50 text-violet-700 dark:bg-violet-500/10 dark:text-violet-400",
     Remote: "bg-sky-50 text-sky-700 dark:bg-sky-500/10 dark:text-sky-400",
   }[region];
   const dot = {
     India: "bg-amber-500",
     UAE: "bg-emerald-500",
+    Egypt: "bg-violet-500",
     Remote: "bg-sky-500",
   }[region];
 
@@ -48,7 +50,7 @@ export function SeniorityBadge({
 
 export function Chip({ children }: { children: ReactNode }) {
   return (
-    <span className="inline-flex items-center rounded-md border border-[var(--border)] bg-[var(--surface)] px-2 py-1 text-xs font-medium text-[var(--muted)]">
+    <span className="inline-flex items-center rounded-full border border-[var(--border)] bg-[var(--background)] px-2.5 py-1 text-[11.5px] font-medium text-[var(--muted)]">
       {children}
     </span>
   );

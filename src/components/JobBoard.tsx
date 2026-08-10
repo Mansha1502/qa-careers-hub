@@ -5,7 +5,7 @@ import { Job, Region, Seniority } from "@/lib/types";
 import { seniorityOrder } from "@/lib/utils";
 import JobCard from "./JobCard";
 
-const REGIONS: (Region | "All")[] = ["All", "India", "UAE", "Remote"];
+const REGIONS: (Region | "All")[] = ["All", "India", "UAE", "Egypt", "Remote"];
 type SortKey = "newest" | "oldest" | "company";
 type RefreshState = "idle" | "loading" | "done" | "error";
 
@@ -118,12 +118,12 @@ export default function JobBoard({ jobs: initialJobs }: { jobs: Job[] }) {
 
   return (
     <div id="jobs" className="scroll-mt-20">
-      <div className="flex flex-col gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5">
+      <div className="card-shadow flex flex-col gap-4 rounded-2xl border border-[var(--border)] bg-[var(--surface)] p-4 sm:p-5">
         {/* search + refresh row */}
         <div className="flex flex-col gap-3 sm:flex-row sm:items-center">
           <div className="relative flex-1">
             <svg
-              className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted)]"
+              className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted-soft)]"
               viewBox="0 0 24 24"
               fill="none"
               stroke="currentColor"
@@ -137,7 +137,7 @@ export default function JobBoard({ jobs: initialJobs }: { jobs: Job[] }) {
               value={query}
               onChange={(e) => setQuery(e.target.value)}
               placeholder="Search by title, company, or skill (e.g. Playwright, Selenium)"
-              className="w-full rounded-lg border border-[var(--border)] bg-[var(--background)] py-2.5 pl-10 pr-4 text-sm text-[var(--foreground)] placeholder:text-[var(--muted)] outline-none ring-[var(--ring)] focus:ring-2"
+              className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] py-2.5 pl-10 pr-4 text-[14px] text-[var(--foreground)] placeholder:text-[var(--muted-soft)] outline-none ring-[var(--ring)] transition-shadow focus:ring-2"
             />
           </div>
 
@@ -145,7 +145,7 @@ export default function JobBoard({ jobs: initialJobs }: { jobs: Job[] }) {
             <select
               value={sort}
               onChange={(e) => setSort(e.target.value as SortKey)}
-              className="rounded-lg border border-[var(--border)] bg-[var(--background)] px-3 py-2.5 text-sm text-[var(--foreground)] outline-none ring-[var(--ring)] focus:ring-2"
+              className="rounded-xl border border-[var(--border)] bg-[var(--background)] px-3 py-2.5 text-[14px] text-[var(--foreground)] outline-none ring-[var(--ring)] focus:ring-2"
             >
               <option value="newest">Newest first</option>
               <option value="oldest">Oldest first</option>
@@ -156,7 +156,7 @@ export default function JobBoard({ jobs: initialJobs }: { jobs: Job[] }) {
               onClick={handleRefresh}
               disabled={refreshState === "loading"}
               title="Re-check the server for the latest published listings"
-              className="relative inline-flex shrink-0 items-center gap-1.5 rounded-lg border border-[var(--border)] px-3 py-2.5 text-sm font-medium text-[var(--muted)] transition-colors hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] disabled:opacity-60"
+              className="relative inline-flex shrink-0 items-center gap-1.5 rounded-xl border border-[var(--border)] px-3.5 py-2.5 text-[14px] font-medium text-[var(--muted)] transition-colors hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] disabled:opacity-60"
             >
               <svg
                 width="15"

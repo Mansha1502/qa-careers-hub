@@ -35,6 +35,11 @@ export const regionStyles: Record<Region, { bg: string; text: string; dot: strin
     text: "text-emerald-700 dark:text-emerald-400",
     dot: "bg-emerald-500",
   },
+  Egypt: {
+    bg: "bg-violet-50 dark:bg-violet-500/10",
+    text: "text-violet-700 dark:text-violet-400",
+    dot: "bg-violet-500",
+  },
   Remote: {
     bg: "bg-sky-50 dark:bg-sky-500/10",
     text: "text-sky-700 dark:text-sky-400",

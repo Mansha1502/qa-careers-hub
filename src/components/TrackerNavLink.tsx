@@ -10,7 +10,7 @@ export default function TrackerNavLink() {
   return (
     <Link
       href="/tracker"
-      className="relative hidden items-center rounded-lg px-3 py-2 text-sm font-medium text-[var(--muted)] transition-colors hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] sm:flex"
+      className="relative hidden items-center rounded-full px-3.5 py-2 text-[13.5px] font-medium text-[var(--muted)] transition-colors hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] sm:flex"
     >
       My Tracker
       {hydrated && count > 0 && (
