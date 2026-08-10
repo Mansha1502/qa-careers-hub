@@ -10,16 +10,6 @@ type SortKey = "newest" | "oldest" | "company";
 type RefreshState = "idle" | "loading" | "done" | "error";
 const PAGE_SIZE = 18;
 
-function dedupeJobs(jobs: Job[]): Job[] {
-  const seen = new Set<string>();
-  return jobs.filter((job) => {
-    const key = `${job.company.toLowerCase().trim()}::${job.title.toLowerCase().trim()}`;
-    if (seen.has(key)) return false;
-    seen.add(key);
-    return true;
-  });
-}
-
 export default function JobBoard({ jobs: initialJobs }: { jobs: Job[] }) {
   const [jobs, setJobs] = useState<Job[]>(initialJobs);
   const [region, setRegion] = useState<Region | "All">("All");
@@ -28,7 +18,6 @@ export default function JobBoard({ jobs: initialJobs }: { jobs: Job[] }) {
   const [sort, setSort] = useState<SortKey>("newest");
   const [refreshState, setRefreshState] = useState<RefreshState>("idle");
   const [refreshMessage, setRefreshMessage] = useState("");
-  const [liveUnconfigured, setLiveUnconfigured] = useState(false);
   const [page, setPage] = useState(1);
 
   function selectRegion(r: Region | "All") {
@@ -49,41 +38,23 @@ export default function JobBoard({ jobs: initialJobs }: { jobs: Job[] }) {
   async function handleRefresh() {
     setRefreshState("loading");
     try {
-      const [staticRes, indiaLiveRes, remoteLiveRes] = await Promise.all([
-        fetch("/api/jobs", { cache: "no-store" }),
-        fetch("/api/jobs/live?region=india", { cache: "no-store" }),
-        fetch("/api/jobs/live?region=remote", { cache: "no-store" }),
-      ]);
+      const res = await fetch("/api/jobs", { cache: "no-store" });
+      if (!res.ok) throw new Error("Request failed");
+      const data: { jobs: Job[]; updatedAt: string } = await res.json();
 
-      if (!staticRes.ok) throw new Error("Request failed");
-      const staticData: { jobs: Job[]; updatedAt: string } = await staticRes.json();
-      const indiaLive: { configured: boolean; jobs: Job[] } = indiaLiveRes.ok
-        ? await indiaLiveRes.json()
-        : { configured: true, jobs: [] };
-      const remoteLive: { configured: boolean; jobs: Job[] } = remoteLiveRes.ok
-        ? await remoteLiveRes.json()
-        : { configured: true, jobs: [] };
-
-      const isConfigured = indiaLive.configured && remoteLive.configured;
-      setLiveUnconfigured(!isConfigured);
-
-      const merged = dedupeJobs([...staticData.jobs, ...indiaLive.jobs, ...remoteLive.jobs]);
       const previousIds = new Set(jobs.map((j) => j.id));
-      const newCount = merged.filter((j) => !previousIds.has(j.id)).length;
-      const liveCount = indiaLive.jobs.length + remoteLive.jobs.length;
+      const newCount = data.jobs.filter((j) => !previousIds.has(j.id)).length;
 
-      setJobs(merged);
+      setJobs(data.jobs);
       setPage(1);
-      if (!isConfigured) {
+      if (newCount > 0) {
         setRefreshMessage(
-          `Curated snapshot refreshed · ${staticData.jobs.length} roles. Live India/Remote refresh isn't configured yet.`
-        );
-      } else if (newCount > 0) {
-        setRefreshMessage(
-          `Loaded ${newCount} new role${newCount === 1 ? "" : "s"} · ${liveCount} live from Adzuna · ${merged.length} total`
+          `Loaded ${newCount} new role${newCount === 1 ? "" : "s"} · ${data.jobs.length} total. New roles are added weekly, every Monday.`
         );
       } else {
-        setRefreshMessage(`You're up to date · ${merged.length} roles · ${liveCount} checked live just now`);
+        setRefreshMessage(
+          `You're up to date · ${data.jobs.length} roles. New roles are added weekly, every Monday.`
+        );
       }
       setRefreshState("done");
     } catch {
@@ -209,20 +180,6 @@ export default function JobBoard({ jobs: initialJobs }: { jobs: Job[] }) {
             </button>
           </div>
         </div>
-
-        {liveUnconfigured && (
-          <div className="rounded-lg border border-amber-200 bg-amber-50 px-3.5 py-2.5 text-xs leading-relaxed text-amber-800 dark:border-amber-500/20 dark:bg-amber-500/10 dark:text-amber-400">
-            Live refresh for India &amp; Remote isn&apos;t configured yet — add{" "}
-            <code className="rounded bg-black/5 px-1 py-0.5 font-mono dark:bg-white/10">
-              ADZUNA_APP_ID
-            </code>{" "}
-            and{" "}
-            <code className="rounded bg-black/5 px-1 py-0.5 font-mono dark:bg-white/10">
-              ADZUNA_APP_KEY
-            </code>{" "}
-            (free at developer.adzuna.com) to enable it. Showing the curated snapshot instead.
-          </div>
-        )}
 
         {/* region tabs */}
         <div className="flex flex-wrap items-center gap-1.5">
