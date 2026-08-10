@@ -29,6 +29,12 @@ export default function Header() {
           </Link>
           <TrackerNavLink />
           <Link
+            href="/recruiters"
+            className="hidden rounded-lg px-3 py-2 text-sm font-medium text-[var(--muted)] transition-colors hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] sm:block"
+          >
+            Recruiter Contacts
+          </Link>
+          <Link
             href="/about"
             className="hidden rounded-lg px-3 py-2 text-sm font-medium text-[var(--muted)] transition-colors hover:bg-[var(--surface-hover)] hover:text-[var(--foreground)] sm:block"
           >

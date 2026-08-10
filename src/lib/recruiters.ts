@@ -1,0 +1,248 @@
+export type RecruiterCategory = "Recruiting Agency" | "IT Company";
+export type HiringRegion = "Remote" | "UAE" | "Delhi";
+
+export interface RecruiterContact {
+  id: string;
+  company: string;
+  category: RecruiterCategory;
+  hiresFor: HiringRegion[];
+  location: string;
+  contactType: "email" | "careers_page";
+  contactValue: string;
+  contactLabel?: string;
+  note?: string;
+}
+
+// Every entry here was verified against the company's own site or a genuine
+// job posting we sourced — never guessed. Most large corporates don't publish
+// a direct recruiter email at all (application-portal only), so those are
+// listed with a careers page link instead of an invented address.
+export const recruiters: RecruiterContact[] = [
+  // ---------- Recruiting agencies ----------
+  {
+    id: "michael-page-india",
+    company: "Michael Page India",
+    category: "Recruiting Agency",
+    hiresFor: ["Delhi"],
+    location: "Gurgaon, Mumbai, Bengaluru",
+    contactType: "email",
+    contactValue: "enquiries@michaelpage.co.in",
+    note: "Global professional recruitment consultancy with a technology practice; Gurgaon (Delhi NCR) office.",
+  },
+  {
+    id: "xpheno",
+    company: "Xpheno",
+    category: "Recruiting Agency",
+    hiresFor: ["Delhi"],
+    location: "Bengaluru (HQ), Delhi, Mumbai, Pune, Hyderabad",
+    contactType: "email",
+    contactValue: "hr@xpheno.com",
+    note: "Specialist IT/tech staffing firm with a Delhi office.",
+  },
+  {
+    id: "ciel-hr",
+    company: "CIEL HR",
+    category: "Recruiting Agency",
+    hiresFor: ["Delhi"],
+    location: "Chennai (HQ), pan-India",
+    contactType: "email",
+    contactValue: "info@cielhr.com",
+    note: "One of India's largest HR/staffing firms across industries including IT.",
+  },
+  {
+    id: "teamlease-digital",
+    company: "TeamLease Digital",
+    category: "Recruiting Agency",
+    hiresFor: ["Delhi"],
+    location: "Delhi NCR (Wazirpur) and pan-India",
+    contactType: "careers_page",
+    contactValue: "https://www.teamleasedigital.com/contact-us",
+    note: "IT & tech staffing arm of TeamLease; no direct email published, contact form only.",
+  },
+  {
+    id: "quess-corp",
+    company: "Quess IT Staffing",
+    category: "Recruiting Agency",
+    hiresFor: ["Delhi"],
+    location: "Bengaluru (HQ), pan-India",
+    contactType: "careers_page",
+    contactValue: "https://itstaffing.quesscorp.com/contact-us/",
+    note: "One of India's largest staffing companies; contact form only, no public email.",
+  },
+  {
+    id: "nadia-global",
+    company: "NADIA Global",
+    category: "Recruiting Agency",
+    hiresFor: ["UAE"],
+    location: "Dubai, Abu Dhabi",
+    contactType: "email",
+    contactValue: "contact@nadiaglobal.com",
+    note: "UAE/KSA-focused executive search and permanent recruitment agency.",
+  },
+  {
+    id: "charterhouse-middle-east",
+    company: "Charterhouse Middle East",
+    category: "Recruiting Agency",
+    hiresFor: ["UAE"],
+    location: "Dubai",
+    contactType: "email",
+    contactValue: "info@charterhouseme.ae",
+    note: "Established Dubai recruitment consultancy across technology and other sectors.",
+  },
+  {
+    id: "cooper-fitch",
+    company: "Cooper Fitch",
+    category: "Recruiting Agency",
+    hiresFor: ["UAE"],
+    location: "Dubai",
+    contactType: "careers_page",
+    contactValue: "https://cooperfitch.ae/contact-us/",
+    note: "Dubai executive search and recruitment firm; no public email, contact form only.",
+  },
+  {
+    id: "toptal",
+    company: "Toptal",
+    category: "Recruiting Agency",
+    hiresFor: ["Remote"],
+    location: "Global (fully distributed)",
+    contactType: "email",
+    contactValue: "support@toptal.com",
+    contactLabel: "Support (general — not a dedicated recruiting inbox)",
+    note: "Freelance talent network placing vetted developers/QA talent with global clients remotely.",
+  },
+  {
+    id: "turing",
+    company: "Turing",
+    category: "Recruiting Agency",
+    hiresFor: ["Remote"],
+    location: "Palo Alto, CA (matches remote talent globally)",
+    contactType: "careers_page",
+    contactValue: "https://www.turing.com/jobs",
+    note: "Matches remote developers/QA engineers with US companies; no public email, apply via platform.",
+  },
+
+  // ---------- IT / tech companies ----------
+  {
+    id: "tcs",
+    company: "Tata Consultancy Services (TCS)",
+    category: "IT Company",
+    hiresFor: ["Delhi"],
+    location: "Pan-India incl. Delhi NCR",
+    contactType: "email",
+    contactValue: "careers@tcs.com",
+    note: "Published recruitment contact per TCS's own careers site.",
+  },
+  {
+    id: "hcltech",
+    company: "HCLTech",
+    category: "IT Company",
+    hiresFor: ["Delhi"],
+    location: "Noida and pan-India",
+    contactType: "careers_page",
+    contactValue: "https://careers.hcltech.com/",
+    note: "No public recruiting email — applications go through the careers portal only.",
+  },
+  {
+    id: "cognizant-india",
+    company: "Cognizant",
+    category: "IT Company",
+    hiresFor: ["Delhi"],
+    location: "Gurugram, Noida",
+    contactType: "careers_page",
+    contactValue: "https://careers.cognizant.com/india-en/",
+    note: "No public recruiting email — applications go through the careers portal only.",
+  },
+  {
+    id: "genpact",
+    company: "Genpact",
+    category: "IT Company",
+    hiresFor: ["Delhi"],
+    location: "Gurugram, Noida",
+    contactType: "careers_page",
+    contactValue: "https://www.genpact.com/careers",
+    note: "No public recruiting email — applications go through the careers portal only.",
+  },
+  {
+    id: "talabat",
+    company: "talabat",
+    category: "IT Company",
+    hiresFor: ["UAE"],
+    location: "Dubai",
+    contactType: "email",
+    contactValue: "inquiries@talabat.com",
+    contactLabel: "General inquiries (not HR-specific)",
+    note: "Regional delivery-tech platform (Delivery Hero) with a large engineering org in Dubai.",
+  },
+  {
+    id: "careem",
+    company: "Careem",
+    category: "IT Company",
+    hiresFor: ["UAE"],
+    location: "Dubai",
+    contactType: "careers_page",
+    contactValue: "https://www.careem.com/careers/",
+    note: "No public recruiting email — applications go through the careers portal only.",
+  },
+  {
+    id: "du-eitc",
+    company: "du (Emirates Integrated Telecommunications)",
+    category: "IT Company",
+    hiresFor: ["UAE"],
+    location: "Dubai, Abu Dhabi",
+    contactType: "careers_page",
+    contactValue: "https://www.du.ae/about/careers",
+    note: "No public recruiting email — applications go through the careers portal only.",
+  },
+  {
+    id: "g42",
+    company: "G42",
+    category: "IT Company",
+    hiresFor: ["UAE"],
+    location: "Abu Dhabi",
+    contactType: "careers_page",
+    contactValue: "https://careers.g42.ai/",
+    note: "AI/tech holding group; only a media contact is public, no HR email — apply via the careers portal.",
+  },
+  {
+    id: "emirates-group",
+    company: "The Emirates Group",
+    category: "IT Company",
+    hiresFor: ["UAE"],
+    location: "Dubai",
+    contactType: "careers_page",
+    contactValue: "https://www.emiratesgroupcareers.com/search-and-apply/",
+    note: "No public recruiting email — applications go through the careers portal only.",
+  },
+
+  // ---------- Genuine emails surfaced directly from real job postings we sourced ----------
+  {
+    id: "dailypoint",
+    company: "dailypoint (Toedt, Dr. Selk & Coll. GmbH)",
+    category: "IT Company",
+    hiresFor: ["UAE"],
+    location: "Dubai",
+    contactType: "email",
+    contactValue: "bewerbungen@dailypoint.net",
+    note: "Hotel-industry CRM company; email was published directly in their Software Tester job posting.",
+  },
+  {
+    id: "rxcloud",
+    company: "RxCloud",
+    category: "IT Company",
+    hiresFor: ["Remote", "Delhi"],
+    location: "India, remote",
+    contactType: "email",
+    contactValue: "megha.saxena@therxcloud.com",
+    note: "Healthcare-tech company; email was published directly in their Automation Tester job posting.",
+  },
+  {
+    id: "drivetrain",
+    company: "Drivetrain",
+    category: "IT Company",
+    hiresFor: ["Remote", "Delhi"],
+    location: "India, remote",
+    contactType: "email",
+    contactValue: "careers@drivetrain.ai",
+    note: "SaaS analytics company; email was published directly in their QA internship posting.",
+  },
+];
