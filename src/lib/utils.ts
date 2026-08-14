@@ -1,10 +1,22 @@
 import { Region, Seniority } from "./types";
 
-export function timeAgo(dateStr: string): string {
+// Bump this to the current date each time jobs.ts is refreshed with new listings.
+// Drives "time ago" text, the "New" badge window, and the /api/jobs updatedAt field —
+// kept as a pinned snapshot date (not wall-clock time) so listings don't silently
+// drift stale-looking between refreshes.
+export const SITE_UPDATED_AT = "2026-08-14";
+
+const NEW_JOB_WINDOW_DAYS = 2;
+
+function daysSince(dateStr: string): number {
   const date = new Date(dateStr);
-  const now = new Date("2026-08-08");
+  const now = new Date(SITE_UPDATED_AT);
   const diffMs = now.getTime() - date.getTime();
-  const diffDays = Math.round(diffMs / (1000 * 60 * 60 * 24));
+  return Math.round(diffMs / (1000 * 60 * 60 * 24));
+}
+
+export function timeAgo(dateStr: string): string {
+  const diffDays = daysSince(dateStr);
 
   if (diffDays <= 0) return "Today";
   if (diffDays === 1) return "1 day ago";
@@ -13,6 +25,11 @@ export function timeAgo(dateStr: string): string {
   if (months < 12) return months === 1 ? "1 month ago" : `${months} months ago`;
   const years = Math.round(months / 12);
   return years === 1 ? "1 year ago" : `${years} years ago`;
+}
+
+export function isNewJob(dateStr: string): boolean {
+  const diffDays = daysSince(dateStr);
+  return diffDays >= 0 && diffDays <= NEW_JOB_WINDOW_DAYS;
 }
 
 export function formatDate(dateStr: string): string {

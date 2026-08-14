@@ -2,7 +2,11 @@
 
 import { useMemo, useState } from "react";
 import { recruiters, HiringRegion, RecruiterCategory, RecruiterContact } from "@/lib/recruiters";
+import { companyDirectory, DirectorySheet } from "@/lib/companyDirectory";
 import RecruiterCard from "@/components/RecruiterCard";
+import CompanyDirectoryTable from "@/components/CompanyDirectoryTable";
+
+const DIRECTORY_SHEETS: DirectorySheet[] = ["MENA Ecommerce", "Global Ecommerce", "Remote-First Tech"];
 
 function csvCell(value: string): string {
   return /[",\n]/.test(value) ? `"${value.replace(/"/g, '""')}"` : value;
@@ -24,6 +28,9 @@ const REGION_LABELS: Record<HiringRegion, string> = {
 };
 
 export default function RecruitersPage() {
+  const [view, setView] = useState<"contacts" | "directory">("contacts");
+  const [directorySheet, setDirectorySheet] = useState<DirectorySheet>("MENA Ecommerce");
+  const [directoryQuery, setDirectoryQuery] = useState("");
   const [region, setRegion] = useState<HiringRegion | "All">("All");
   const [category, setCategory] = useState<RecruiterCategory | "All">("All");
   const [query, setQuery] = useState("");
@@ -60,6 +67,19 @@ export default function RecruitersPage() {
   }, [region, category, query]);
 
   const totalShown = groups.reduce((sum, g) => sum + g.contacts.length, 0);
+
+  const directoryRows = useMemo(() => {
+    const q = directoryQuery.trim().toLowerCase();
+    return companyDirectory.filter((c) => {
+      if (c.sheet !== directorySheet) return false;
+      if (!q) return true;
+      return (
+        c.company.toLowerCase().includes(q) ||
+        c.hqCountry.toLowerCase().includes(q) ||
+        c.notes.toLowerCase().includes(q)
+      );
+    });
+  }, [directorySheet, directoryQuery]);
 
   const uniqueContacts = useMemo(() => {
     const seen = new Map<string, RecruiterContact>();
@@ -107,6 +127,86 @@ export default function RecruitersPage() {
         own site or a real job posting we sourced — never guessed.
       </p>
 
+      <div className="mt-7 inline-flex items-center gap-1 rounded-full border border-[var(--border)] bg-[var(--background)] p-1">
+        <button
+          onClick={() => setView("contacts")}
+          className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+            view === "contacts"
+              ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
+              : "text-[var(--muted)] hover:text-[var(--foreground)]"
+          }`}
+        >
+          Recruiter Contacts
+        </button>
+        <button
+          onClick={() => setView("directory")}
+          className={`rounded-full px-4 py-2 text-sm font-medium transition-colors ${
+            view === "directory"
+              ? "bg-[var(--accent)] text-[var(--accent-foreground)]"
+              : "text-[var(--muted)] hover:text-[var(--foreground)]"
+          }`}
+        >
+          Company Directory
+        </button>
+      </div>
+
+      {view === "directory" ? (
+        <div className="mt-6">
+          <p className="max-w-2xl text-[15px] leading-relaxed text-[var(--muted)]">
+            {companyDirectory.length} e-commerce and tech companies with their careers-page
+            links, grouped the same way as the source spreadsheet. None of these have a
+            published recruiter email — apply via the careers page or search the company on
+            LinkedIn.
+          </p>
+
+          <div className="mt-6 flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+            <div className="flex flex-wrap items-center gap-1.5">
+              {DIRECTORY_SHEETS.map((s) => (
+                <button
+                  key={s}
+                  onClick={() => setDirectorySheet(s)}
+                  className={`rounded-full px-3.5 py-1.5 text-sm font-medium transition-colors ${
+                    directorySheet === s
+                      ? "border-[var(--accent)] bg-[var(--accent-soft)] text-[var(--accent)]"
+                      : "border border-[var(--border)] text-[var(--muted)] hover:text-[var(--foreground)]"
+                  }`}
+                >
+                  {s}
+                </button>
+              ))}
+            </div>
+            <div className="relative sm:w-72">
+              <svg
+                className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-[var(--muted-soft)]"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+              >
+                <circle cx="11" cy="11" r="7" />
+                <path d="m21 21-4.3-4.3" strokeLinecap="round" />
+              </svg>
+              <input
+                type="text"
+                value={directoryQuery}
+                onChange={(e) => setDirectoryQuery(e.target.value)}
+                placeholder="Search this tab"
+                className="w-full rounded-xl border border-[var(--border)] bg-[var(--background)] py-2.5 pl-10 pr-4 text-[14px] text-[var(--foreground)] placeholder:text-[var(--muted-soft)] outline-none ring-[var(--ring)] focus:ring-2"
+              />
+            </div>
+          </div>
+
+          <p className="mt-4 text-sm text-[var(--muted)]">
+            Showing <span className="font-medium text-[var(--foreground)]">{directoryRows.length}</span> compan
+            {directoryRows.length === 1 ? "y" : "ies"} in {directorySheet}
+          </p>
+
+          <div className="mt-4">
+            <CompanyDirectoryTable rows={directoryRows} />
+          </div>
+        </div>
+      ) : (
+      <>
       <div className="mt-7 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-[var(--border)] bg-[var(--border)] sm:grid-cols-4">
         <div className="bg-[var(--surface)] px-4 py-4 text-center">
           <div className="font-display text-2xl font-medium tracking-tight text-[var(--foreground)]">
@@ -242,6 +342,8 @@ export default function RecruitersPage() {
         consultant&apos;s personal email rather than a general inbox — those are
         labeled accordingly since that contact could change over time.
       </div>
+      </>
+      )}
     </div>
   );
 }

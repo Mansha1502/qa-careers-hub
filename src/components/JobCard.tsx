@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { Job } from "@/lib/types";
-import { companyInitials, timeAgo } from "@/lib/utils";
+import { companyInitials, isNewJob, timeAgo } from "@/lib/utils";
 import { RegionBadge, SeniorityBadge } from "./Badge";
 import { useTracker } from "./TrackerProvider";
 import { STATUS_LABELS, STATUS_STYLES } from "@/lib/tracker";
@@ -68,6 +68,11 @@ export default function JobCard({ job }: { job: Job }) {
           <span className="inline-flex items-center gap-1 rounded-full bg-emerald-500/10 px-2.5 py-1 text-[11px] font-medium text-emerald-600 dark:text-emerald-400">
             <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
             Live
+          </span>
+        )}
+        {isNewJob(job.postedDate) && (
+          <span className="inline-flex items-center rounded-full bg-[var(--accent)] px-2.5 py-1 text-[11px] font-semibold text-[var(--accent-foreground)]">
+            New
           </span>
         )}
       </div>
