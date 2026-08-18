@@ -1,3 +1,5 @@
+import { SITE_UPDATED_AT, formatDate } from "@/lib/utils";
+
 export default function Footer() {
   return (
     <footer className="border-t border-[var(--border)] bg-[var(--surface)]">
@@ -27,7 +29,7 @@ export default function Footer() {
             </p>
             <p className="mt-2.5">
               Listings are aggregated from public job boards (primarily Indeed and
-              Himalayas) and reflect a snapshot from early August 2026. Postings can
+              Himalayas) and reflect a snapshot from {formatDate(SITE_UPDATED_AT)}. Postings can
               close or change at any time — always verify details and your eligibility
               on the original listing before applying.
             </p>

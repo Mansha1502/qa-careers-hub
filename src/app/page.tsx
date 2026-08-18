@@ -1,6 +1,7 @@
 import { jobs } from "@/lib/jobs";
 import StatsBar from "@/components/StatsBar";
 import JobBoard from "@/components/JobBoard";
+import { SITE_UPDATED_AT, formatDate } from "@/lib/utils";
 
 export default function Home() {
   return (
@@ -22,7 +23,7 @@ export default function Home() {
           <div className="max-w-2xl animate-fade-up">
             <span className="inline-flex items-center gap-1.5 rounded-full border border-[var(--border-strong)] bg-[var(--surface)] px-3 py-1 text-[11px] font-semibold uppercase tracking-wider text-[var(--muted)]">
               <span className="h-1.5 w-1.5 rounded-full bg-emerald-500" />
-              Snapshot updated August 10, 2026
+              Snapshot updated {formatDate(SITE_UPDATED_AT)}
             </span>
 
             <h1 className="font-display mt-6 text-[2.75rem] font-medium leading-[1.05] tracking-tight text-[var(--foreground)] sm:text-6xl">
