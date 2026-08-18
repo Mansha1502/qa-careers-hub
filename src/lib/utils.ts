@@ -4,7 +4,7 @@ import { Region, Seniority } from "./types";
 // Drives "time ago" text, the "New" badge window, and the /api/jobs updatedAt field —
 // kept as a pinned snapshot date (not wall-clock time) so listings don't silently
 // drift stale-looking between refreshes.
-export const SITE_UPDATED_AT = "2026-08-14";
+export const SITE_UPDATED_AT = "2026-08-18";
 
 const NEW_JOB_WINDOW_DAYS = 2;
 
